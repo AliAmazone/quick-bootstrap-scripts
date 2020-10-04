@@ -1,0 +1,105 @@
+{
+    "name": "new_django_react_script",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "keywords": [],
+    "scripts": {
+        "dev": "webpack-dev-server --config webpack.dev.js",
+        "build": "webpack --config webpack.prod.js",
+        "watch": "webpack --config webpack.dev.js --watch",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "engines": {
+        "node": "12.16.1",
+        "npm": "6.14.5"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-class-properties",
+            "@babel/plugin-syntax-dynamic-import",
+            "@babel/plugin-transform-runtime"
+        ]
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "prettier": {
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "jsxSingleQuote": false,
+        "quoteProps": "consistent",
+        "semi": true,
+        "singleQuote": false,
+        "tabWidth": 4,
+        "trailingComma": "all"
+    },
+    "author": "Kenneth V. Domingo <kvdomingo@up.edu.ph>",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.9.6",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.11.5",
+        "@babel/preset-env": "^7.9.6",
+        "@babel/preset-react": "^7.9.4",
+        "@babel/register": "^7.9.0",
+        "@svgr/webpack": "^5.4.0",
+        "autoprefixer": "^9.7.6",
+        "babel-eslint": "^10.1.0",
+        "babel-loader": "^8.1.0",
+        "clean-webpack-plugin": "^3.0.0",
+        "compression-webpack-plugin": "^3.1.0",
+        "css-loader": "^3.6.0",
+        "eslint": "^6.8.0",
+        "eslint-config-react-app": "^5.2.1",
+        "eslint-plugin-flowtype": "^4.7.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-react": "^7.19.0",
+        "eslint-plugin-react-hooks": "^2.5.1",
+        "file-loader": "^6.0.0",
+        "html-webpack-plugin": "^4.3.0",
+        "mini-css-extract-plugin": "^0.9.0",
+        "node-sass": "^4.14.1",
+        "postcss-loader": "^3.0.0",
+        "prettier": "^2.1.2",
+        "prop-types": "^15.7.2",
+        "sass": "^1.26.5",
+        "sass-loader": "^8.0.2",
+        "style-loader": "^1.2.1",
+        "ttf-loader": "^1.0.2",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "url-loader": "^4.1.0",
+        "webpack": "^4.43.0",
+        "webpack-bundle-analyzer": "^3.7.0",
+        "webpack-bundle-tracker": "^0.4.3",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0",
+        "webpack-merge": "^4.2.2",
+        "zlib": "^1.0.5"
+    },
+    "dependencies": {
+        "axios": "^0.20.0",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-helmet": "^6.0.0",
+        "react-router-dom": "^5.2.0"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}
