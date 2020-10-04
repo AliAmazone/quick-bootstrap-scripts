@@ -15,10 +15,9 @@ def main():
     if args.project_name in os.listdir():
         proceed = input(f"Directory \"{args.project_name}\" already exists. Continue? [y/N] ").strip().lower()
         if proceed != "y":
-            return 1
+            return 0
     else:
-        if not (args.project_name.startswith(".") and args.project_name.endswith(".")):
-            os.mkdir(args.project_name)
+        os.mkdir(args.project_name)
 
     subprocess.run(f"copy .\\resources\\.gitignore .\\{args.project_name}\\.gitignore", shell=True)
     subprocess.run(f"copy .\\resources\\package.json .\\{args.project_name}\\package.json", shell=True)
