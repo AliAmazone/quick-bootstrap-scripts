@@ -237,7 +237,7 @@ def main():
     with open(".env", "w") as f:
         f.writelines(envs)
 
-    print(f"The project {args.project_name} has been initialized!")
+    print(f"\nThe project {args.project_name} has been initialized!")
     return 0
 
 
