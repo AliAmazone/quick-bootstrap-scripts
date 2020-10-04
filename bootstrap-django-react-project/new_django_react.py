@@ -20,11 +20,11 @@ def main():
         if not (args.project_name.startswith(".") and args.project_name.endswith(".")):
             os.mkdir(args.project_name)
 
-    subprocess.run(f"copy .gitignore .\\{args.project_name}\\.gitignore", shell=True)
-    subprocess.run(f"copy package.json .\\{args.project_name}\\package.json", shell=True)
-    subprocess.run(f"copy webpack.common.js .\\{args.project_name}\\webpack.common.js", shell=True)
-    subprocess.run(f"copy webpack.dev.js .\\{args.project_name}\\webpack.dev.js", shell=True)
-    subprocess.run(f"copy webpack.prod.js .\\{args.project_name}\\webpack.prod.js", shell=True)
+    subprocess.run(f"copy .\\resources\\.gitignore .\\{args.project_name}\\.gitignore", shell=True)
+    subprocess.run(f"copy .\\resources\\package.json .\\{args.project_name}\\package.json", shell=True)
+    subprocess.run(f"copy .\\resources\\webpack.common.js .\\{args.project_name}\\webpack.common.js", shell=True)
+    subprocess.run(f"copy .\\resources\\webpack.dev.js .\\{args.project_name}\\webpack.dev.js", shell=True)
+    subprocess.run(f"copy .\\resources\\webpack.prod.js .\\{args.project_name}\\webpack.prod.js", shell=True)
     os.chdir(args.project_name)
 
     with open("package.json", "r") as f:
@@ -194,11 +194,11 @@ def main():
 
     os.chdir("../..")
     subprocess.run(
-        f"copy .\\urls.py .\\{args.project_name}\\frontend\\urls.py",
+        f"copy .\\resources\\urls.py .\\{args.project_name}\\frontend\\urls.py",
         shell=True
     )
     subprocess.run(
-        f"copy .\\views.py .\\{args.project_name}\\frontend\\views.py",
+        f"copy .\\resources\\views.py .\\{args.project_name}\\frontend\\views.py",
         shell=True
     )
 
@@ -210,19 +210,19 @@ def main():
     os.makedirs("./frontend/static/frontend/bundles", exist_ok=True)
     os.chdir("..")
     subprocess.run(
-        f"copy .\\index.html .\\{args.project_name}\\frontend\\templates\\frontend\\index.html",
+        f"copy .\\resources\\index.html .\\{args.project_name}\\frontend\\templates\\frontend\\index.html",
         shell=True
     )
     subprocess.run(
-        f"copy .\\index.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.js",
+        f"copy .\\resources\\index.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.js",
         shell=True
     )
     subprocess.run(
-        f"copy .\\index.scss .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.scss",
+        f"copy .\\resources\\index.scss .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.scss",
         shell=True
     )
     subprocess.run(
-        f"copy .\\App.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\components\\App.js",
+        f"copy .\\resources\\App.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\components\\App.js",
         shell=True
     )
 
