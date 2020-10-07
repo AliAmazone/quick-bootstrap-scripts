@@ -3,9 +3,9 @@
 Open a terminal and `cd` to this directory. Run
 
 ```bash
-$> python new_django_react.py [name_of_project]
+$> python new_django_react.py [name_of_project] -l [path_to_project_directory]
 ```
 
-Project will be created in this directory. After the script finishes, you can move the project folder to wherever you want.
+Project will be created in this directory if the `-l`/`--location` argument is not provided. Make sure to specify the location to avoid issues with `pipenv`.
 
-**Note**: Tested only on Windows. This script makes extensive use of the `subprocess` library and was written on a Windows machine, and thus, uses Windows-specific commands.
+**NOTE**: Script was created and tested on Windows, but should work just fine on Linux.

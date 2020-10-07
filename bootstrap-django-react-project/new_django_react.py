@@ -1,30 +1,52 @@
 import os
 import json
 import subprocess
+from warnings import warn
 from argparse import ArgumentParser
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent
+RESOURCES_DIR = BASE_DIR / "resources"
 
 def main():
     parser = ArgumentParser()
     parser.add_argument("project_name")
+    parser.add_argument("-l", "--location", default=None)
     args = parser.parse_args()
 
-    n = 9
+    n = 10
 
     print(f"\nStep 1/{n}: Creating project directory")
-    if args.project_name in os.listdir():
+
+    if "-" in args.project_name:
+        warn("project_name contains invalid characters '-'; automatically replacing with '_'")
+        args.project_name = args.project_name.replace("-", "_")
+
+    if args.location is None:
+        args.location = BASE_DIR / args.project_name
+    else:
+        args.location = Path(args.location).resolve()
+
+    if args.location.exists():
         proceed = input(f"Directory \"{args.project_name}\" already exists. Continue? [y/N] ").strip().lower()
         if proceed != "y":
             return 0
     else:
-        os.mkdir(args.project_name)
+        os.makedirs(args.location, exist_ok=True)
 
-    subprocess.run(f"copy .\\resources\\.gitignore .\\{args.project_name}\\.gitignore", shell=True)
-    subprocess.run(f"copy .\\resources\\package.json .\\{args.project_name}\\package.json", shell=True)
-    subprocess.run(f"copy .\\resources\\webpack.common.js .\\{args.project_name}\\webpack.common.js", shell=True)
-    subprocess.run(f"copy .\\resources\\webpack.dev.js .\\{args.project_name}\\webpack.dev.js", shell=True)
-    subprocess.run(f"copy .\\resources\\webpack.prod.js .\\{args.project_name}\\webpack.prod.js", shell=True)
-    os.chdir(args.project_name)
+    resources = [
+        '.gitignore',
+        'package.json',
+        'webpack.common.js',
+        'webpack.dev.js',
+        'webpack.prod.js',
+    ]
+
+    for resource in resources:
+        subprocess.run(f"copy {RESOURCES_DIR / resource} {args.location / resource}", shell=True)
+
+    os.chdir(args.location)
 
     with open("package.json", "r") as f:
         package = json.load(f)
@@ -43,7 +65,7 @@ def main():
         shell=True,
     )
     subprocess.run(
-        "pipenv install django django-heroku django-webpack-loader python-dotenv djangorestframework djangorestframework-jwt django-filter",
+        "pipenv install django django-heroku django-webpack-loader python-dotenv djangorestframework djangorestframework-jwt django-filter gunicorn",
         shell=True,
     )
 
@@ -93,6 +115,7 @@ def main():
     for i, line in enumerate(settings):
         if "DEBUG" in line:
             debug_line = i
+            break
 
     settings[debug_line] = "DEBUG = os.environ.get('DEBUG')\n"
     settings.insert(debug_line + 1, "\n")
@@ -101,19 +124,25 @@ def main():
     for i, line in enumerate(settings):
         if "ALLOWED_HOSTS" in line:
             hosts_line = i
+            break
 
     settings[hosts_line] = "ALLOWED_HOSTS = ['localhost', '.herokuapp.com']\n"
 
     for i, line in enumerate(settings):
         if "INSTALLED_APPS" in line:
             apps_line = i
+            break
 
     settings.insert(apps_line + 1, "    'backend.apps.BackendConfig',\n")
     settings.insert(apps_line + 2, "    'frontend.apps.FrontendConfig',\n")
+    settings.insert(apps_line + 3, "    'webpack_loader',\n")
+    settings.insert(apps_line + 4, "    'django_filters',\n")
+    settings.insert(apps_line + 5, "    'rest_framework',\n")
 
     for i, line in enumerate(settings):
         if "DATABASES" in line:
             database_line = i
+            break
 
     rest_config = [
         "\n",
@@ -134,12 +163,14 @@ def main():
     for i, line in enumerate(settings):
         if "TIME_ZONE" in line:
             tz_line = i
+            break
 
     settings[tz_line] = "TIME_ZONE = 'Asia/Manila'\n"
 
     for i, line in enumerate(settings):
         if "STATIC_URL" in line:
             static_line = i
+            break
 
     webpack_config = [
         "\n",
@@ -191,42 +222,41 @@ def main():
     with open("urls.py", "w") as f:
         f.writelines(urls)
 
-    os.chdir("../..")
+    os.chdir(BASE_DIR)
     subprocess.run(
-        f"copy .\\resources\\urls.py .\\{args.project_name}\\frontend\\urls.py",
+        f"copy {RESOURCES_DIR / 'urls.py'} {args.location / 'frontend/urls.py'}",
         shell=True
     )
     subprocess.run(
-        f"copy .\\resources\\views.py .\\{args.project_name}\\frontend\\views.py",
+        f"copy {RESOURCES_DIR / 'views.py'} {args.location / 'frontend/views.py'}",
         shell=True
     )
 
     print(f"\nStep 8/{n}: Configuring React directory structure")
-    os.chdir(f"./{args.project_name}")
+    os.chdir(args.location)
     os.makedirs("./frontend/templates/frontend", exist_ok=True)
-    os.makedirs("./frontend/static/frontend/js", exist_ok=True)
     os.makedirs("./frontend/static/frontend/js/components", exist_ok=True)
     os.makedirs("./frontend/static/frontend/bundles", exist_ok=True)
-    os.chdir("..")
+    os.chdir(BASE_DIR)
     subprocess.run(
-        f"copy .\\resources\\index.html .\\{args.project_name}\\frontend\\templates\\frontend\\index.html",
+        f"copy {RESOURCES_DIR / 'index.html'} {args.location / 'frontend/templates/frontend/index.html'}",
         shell=True
     )
     subprocess.run(
-        f"copy .\\resources\\index.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.js",
+        f"copy {RESOURCES_DIR / 'index.js'} {args.location / 'frontend/static/frontend/js/index.js'}",
         shell=True
     )
     subprocess.run(
-        f"copy .\\resources\\index.scss .\\{args.project_name}\\frontend\\static\\frontend\\js\\index.scss",
+        f"copy {RESOURCES_DIR / 'index.scss'} {args.location / 'frontend/static/frontend/js/index.scss'}",
         shell=True
     )
     subprocess.run(
-        f"copy .\\resources\\App.js .\\{args.project_name}\\frontend\\static\\frontend\\js\\components\\App.js",
+        f"copy {RESOURCES_DIR / 'App.js'} {args.location / 'frontend/static/frontend/js/components/App.js'}",
         shell=True
     )
 
     print(f"\nStep 9/{n}: Creating environment variables")
-    os.chdir(f"./{args.project_name}")
+    os.chdir(args.location)
     envs = [
         f"SECRET_KEY={secret_key}\n",
         "DEBUG=1\n",
@@ -235,6 +265,10 @@ def main():
     ]
     with open(".env", "w") as f:
         f.writelines(envs)
+
+    print(f"\nStep 10/{n}: Creating initial commit")
+    subprocess.run("git add .", shell=True)
+    subprocess.run("git commit -m \"Bootstrap Django-React project\"", shell=True)
 
     print(f"\nThe project {args.project_name} has been initialized!")
     return 0
