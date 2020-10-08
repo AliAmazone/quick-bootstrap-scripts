@@ -1,4 +1,6 @@
 import os
+import re
+import string
 import json
 import subprocess
 from warnings import warn
@@ -19,9 +21,11 @@ def main():
 
     print(f"\nStep 1/{n}: Creating project directory")
 
-    if "-" in args.project_name:
-        warn("project_name contains invalid characters '-'; automatically replacing with '_'")
-        args.project_name = args.project_name.replace("-", "_")
+    special_chars = re.escape(string.punctuation)
+
+    if re.search(fr"[{special_chars}]+", args.project_name):
+        warn("\"project_name\" contains invalid characters; automatically replacing with \"_\"")
+        args.project_name = re.sub(fr"[{chars}]", "_", args.project_name)
 
     if args.location is None:
         args.location = BASE_DIR / args.project_name
@@ -52,6 +56,9 @@ def main():
         package = json.load(f)
 
     package["name"] = args.project_name
+    package["version"] = "0.1.0"
+    package["engines"]["node"] = subprocess.run("node --version", shell=True, capture_output=True).stdout.decode().strip().replace("v", "")
+    package["engines"]["npm"] = subprocess.run("npm --version", shell=True, capture_output=True).stdout.decode().strip().replace("v", "")
 
     with open("package.json", "w") as f:
         json.dump(package, f, indent=2)
