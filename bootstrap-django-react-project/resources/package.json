@@ -8,7 +8,7 @@
         "dev": "webpack-dev-server --config webpack.dev.js",
         "build": "webpack --config webpack.prod.js",
         "watch": "webpack --config webpack.dev.js --watch",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "engines": {
         "node": "12.16.1",
@@ -32,10 +32,11 @@
         "arrowParens": "avoid",
         "bracketSpacing": true,
         "jsxSingleQuote": false,
+        "printWidth": 120,
         "quoteProps": "consistent",
         "semi": true,
         "singleQuote": false,
-        "tabWidth": 4,
+        "tabWidth": 2,
         "trailingComma": "all"
     },
     "author": "Kenneth V. Domingo <kvdomingo@up.edu.ph>",
@@ -49,8 +50,11 @@
         "@babel/preset-react": "^7.9.4",
         "@babel/register": "^7.9.0",
         "@svgr/webpack": "^5.4.0",
+		"@testing-library/jest-dom": "^5.11.4",
+		"@testing-library/react": "^11.0.4",
         "autoprefixer": "^9.7.6",
         "babel-eslint": "^10.1.0",
+		"babel-jest": "^26.5.2",
         "babel-loader": "^8.1.0",
         "clean-webpack-plugin": "^3.0.0",
         "compression-webpack-plugin": "^3.1.0",
@@ -64,6 +68,11 @@
         "eslint-plugin-react-hooks": "^2.5.1",
         "file-loader": "^6.0.0",
         "html-webpack-plugin": "^4.3.0",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^26.5.2",
+		"jest-environment-jsdom-fourteen": "^1.0.1",
+		"jest-resolve": "^26.5.2",
+		"jest-watch-typeahead": "^0.6.1",
         "mini-css-extract-plugin": "^0.9.0",
         "node-sass": "^4.14.1",
         "postcss-loader": "^3.0.0",
@@ -85,11 +94,62 @@
     },
     "dependencies": {
         "axios": "^0.20.0",
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1",
+        "react": "^16.14.0",
+		"react-app-polyfill": "^1.0.6",
+        "react-dom": "^16.14.0",
         "react-helmet": "^6.0.0",
         "react-router-dom": "^5.2.0"
     },
+	"jest": {
+		"roots": [
+			"<rootDir>/frontend/static/frontend/js"
+		],
+		"collectCoverageFrom": [
+			"frontend/static/frontend/js/**/*.{js,jsx,ts,tsx}",
+			"!frontend/static/frontend/js/**/*.d.ts"
+		],
+		"setupFiles": [
+			"react-app-polyfill/jsdom"
+		],
+		"setupFilesAfterEnv": [
+			"<rootDir>/frontend/static/frontend/js/setupTests.js"
+		],
+		"testMatch": [
+			"<rootDir>/frontend/static/frontend/js/**/__tests__/**/*.{js,jsx,ts,tsx}",
+			"<rootDir>/frontend/static/frontend/js/*.{spec,test}.{js,jsx,ts,tsx}"
+		],
+		"testEnvironment": "jest-environment-jsdom-fourteen",
+		"transform": {
+			"^.+\\.(jsx?|tsx?)$": "<rootDir>/node_modules/babel-jest",
+			"^.+\\.css$": "<rootDir>/frontend/static/frontend/config/jest/cssTransform.js",
+			"^(?!.*\\\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/frontend/static/frontend/config/jest/fileTransform.js"
+		},
+		"transformIgnorePatterns": [
+			"[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+			"^.+\\.module\\.(css|sass|scss)$"
+		],
+		"modulePaths": [],
+		"moduleNameMapper": {
+			"^react-native$": "react-native-web",
+			"^.+\\.module\\.(css|s[ac]ss)$": "identity-obj-proxy"
+		},
+		"moduleFileExtensions": [
+			"web.js",
+			"js",
+			"web.ts",
+			"ts",
+			"web.tsx",
+			"tsx",
+			"json",
+			"web.jsx",
+			"jsx",
+			"node"
+		],
+		"watchPlugins": [
+			"jest-watch-typeahead/filename",
+			"jest-watch-typeahead/testname"
+		]
+	},
     "browserslist": {
         "production": [
             ">0.2%",

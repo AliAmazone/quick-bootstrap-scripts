@@ -3,6 +3,7 @@ import re
 import string
 import json
 import subprocess
+from time import time
 from warnings import warn
 from argparse import ArgumentParser
 from pathlib import Path
@@ -18,19 +19,20 @@ def main():
     args = parser.parse_args()
 
     n = 10
+    t0 = time()
 
     print(f"\nStep 1/{n}: Creating project directory")
+
+    if args.location is None:
+        args.location = BASE_DIR / args.project_name
+    else:
+        args.location = Path(args.location).resolve() / args.project_name
 
     special_chars = re.escape(string.punctuation)
 
     if re.search(fr"[{special_chars}]+", args.project_name):
         warn("\"project_name\" contains invalid characters; automatically replacing with \"_\"")
-        args.project_name = re.sub(fr"[{chars}]", "_", args.project_name)
-
-    if args.location is None:
-        args.location = BASE_DIR / args.project_name
-    else:
-        args.location = Path(args.location).resolve()
+        args.project_name = re.sub(fr"[{special_chars}]", "_", args.project_name)
 
     if args.location.exists():
         proceed = input(f"Directory \"{args.project_name}\" already exists. Continue? [y/N] ").strip().lower()
@@ -277,7 +279,15 @@ def main():
     subprocess.run("git add .", shell=True)
     subprocess.run("git commit -m \"Bootstrap Django-React project\"", shell=True)
 
-    print(f"\nThe project {args.project_name} has been initialized!")
+    total_time = time() - t0
+    if total_time < 60:
+        str_time = f"{total_time} s"
+    else:
+        sec = (total_time - int(total_time)) * 60
+        minute = int(total_time) / 60
+        str_time = f"{minute} min {sec} s"
+
+    print(f"\nThe project {args.project_name} has been initialized! ({str_time})")
     return 0
 
 
