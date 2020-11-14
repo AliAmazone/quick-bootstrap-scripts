@@ -42,6 +42,7 @@ def main():
         os.makedirs(args.location, exist_ok=True)
 
     resources = [
+        '.gitattributes',
         '.gitignore',
         'package.json',
         'webpack.common.js',
