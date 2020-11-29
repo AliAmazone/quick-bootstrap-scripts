@@ -282,10 +282,10 @@ def main():
 
     total_time = time() - t0
     if total_time < 60:
-        str_time = f"{total_time} s"
+        str_time = f"{round(total_time, 2)} s"
     else:
-        sec = (total_time - int(total_time)) * 60
-        minute = int(total_time) / 60
+        sec = round((total_time - int(total_time)) * 60, 2)
+        minute = int(total_time/60)
         str_time = f"{minute} min {sec} s"
 
     print(f"\nThe project {args.project_name} has been initialized! ({str_time})")
